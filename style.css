@@ -408,3 +408,94 @@ html, body {
         font-size: 14px;
     }
 }
+
+/* =========================================
+   SCROLL VERTICAL SUR TELEPHONE
+   ========================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+.chat-container {
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-box {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+}
+
+/* La zone de saisie reste en bas */
+.input-area {
+    flex-shrink: 0;
+}
+
+/* Messages adaptés à la largeur du téléphone */
+.message {
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.message.bot {
+    max-width: 92%;
+}
+
+/* Les grandes formules restent dans la réponse */
+.response-content {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.response-content mjx-container[display="true"] {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    display: block !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================
+   VERSION TELEPHONE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .chat-container {
+        height: 100dvh;
+        max-height: 100dvh;
+    }
+
+    .chat-box {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto !important;
+        touch-action: pan-y;
+        padding: 12px;
+        padding-bottom: 20px;
+    }
+
+    .message.bot {
+        max-width: 95%;
+    }
+
+    .message.user {
+        max-width: 85%;
+    }
+}
