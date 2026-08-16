@@ -499,3 +499,114 @@ body {
         max-width: 85%;
     }
 }
+
+/* =====================================================
+   CORRECTION DEFINITIVE DU SCROLL SUR TELEPHONE
+   ===================================================== */
+
+@media screen and (max-width: 600px) {
+
+    html,
+    body {
+        width: 100%;
+        height: auto !important;
+        min-height: 100%;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Le conteneur n'a plus de hauteur fixe */
+    .chat-container {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        height: auto !important;
+        max-height: none !important;
+        min-height: 100vh;
+
+        overflow: visible !important;
+
+        margin: 0;
+        border-radius: 0;
+    }
+
+    /* Toute la conversation peut s'allonger */
+    .chat-box {
+        width: 100% !important;
+
+        height: auto !important;
+        max-height: none !important;
+        min-height: 0 !important;
+
+        overflow-y: visible !important;
+        overflow-x: hidden !important;
+
+        padding: 12px;
+        padding-bottom: 25px;
+
+        box-sizing: border-box;
+    }
+
+    /* Les réponses restent dans l'écran */
+    .message {
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    .message.bot {
+        width: auto !important;
+        max-width: 95% !important;
+        margin-right: auto;
+    }
+
+    .message.user {
+        width: auto !important;
+        max-width: 85% !important;
+        margin-left: auto;
+    }
+
+    .response-content {
+        width: 100%;
+        max-width: 100%;
+        overflow-wrap: break-word;
+    }
+
+    /* Formules mathématiques très longues */
+    .response-content mjx-container[display="true"] {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* La zone question reste accessible en bas */
+    .input-area {
+        position: sticky;
+        bottom: 0;
+        z-index: 100;
+
+        width: 100%;
+        box-sizing: border-box;
+
+        background: white;
+        padding: 10px;
+
+        border-top: 1px solid #ddd;
+    }
+
+    #user-input {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #send-btn {
+        flex-shrink: 0;
+    }
+}
