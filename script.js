@@ -238,7 +238,7 @@ async function sendMessage() {
 
 
         const response = await fetch(
-            "http://127.0.0.1:5000/chat",
+            ""https://doumathpro-ai.onrender.com/chat"",
             {
                 method: "POST",
 
