@@ -17,6 +17,15 @@ client = genai.Client(api_key=api_key)
 
 MODEL = "gemini-3.5-flash-lite"
 
+MAX_FILE_SIZE = 15 * 1024 * 1024
+
+ALLOWED_MIME_TYPES = {
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "application/pdf",
+}
+
 
 # ======================================================
 # SYSTEM PROMPT
@@ -67,6 +76,7 @@ SYSTEM_PROMPT = (
 # ======================================================
 
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = MAX_FILE_SIZE + (1024 * 1024)
 CORS(app)
 
 
@@ -79,21 +89,39 @@ def chat():
 
     try:
 
-        data = request.get_json()
+        # Les anciennes questions texte arrivent en JSON.
+        # Les questions avec image/PDF arrivent en multipart/form-data.
+        uploaded_file = request.files.get("file")
 
-        question = data.get("message", "").strip()
+        if request.is_json:
+
+            data = request.get_json(silent=True) or {}
+            question = str(data.get("message", "")).strip()
+
+        else:
+
+            question = str(request.form.get("message", "")).strip()
 
 
         # ==================================================
         # QUESTION VIDE
         # ==================================================
 
-        if not question:
+        if not question and not uploaded_file:
 
             return jsonify({
-                "response": "Veuillez écrire une question de mathématiques.",
+                "response": "Veuillez écrire une question ou ajouter une image/PDF.",
                 "latex": ""
             })
+
+
+        # Question utilisée lorsqu'un document est envoyé sans texte.
+        if uploaded_file and not question:
+
+            question = (
+                "Analyse ce document, recopie clairement l'énoncé mathématique, "
+                "puis donne une solution détaillée étape par étape."
+            )
 
 
         # ==================================================
@@ -111,7 +139,7 @@ def chat():
         # BONJOUR
         # --------------------------
 
-        if salutation == "bonjour":
+        if not uploaded_file and salutation == "bonjour":
 
             return jsonify({
                 "response":
@@ -125,7 +153,7 @@ def chat():
         # BONSOIR
         # --------------------------
 
-        if salutation == "bonsoir":
+        if not uploaded_file and salutation == "bonsoir":
 
             return jsonify({
                 "response":
@@ -139,7 +167,7 @@ def chat():
         # SALUT
         # --------------------------
 
-        if salutation == "salut":
+        if not uploaded_file and salutation == "salut":
 
             return jsonify({
                 "response":
@@ -153,14 +181,53 @@ def chat():
         # QUESTION MATHEMATIQUE → GEMINI
         # ==================================================
 
-        print("Question reçue :", question)
+        print("Question recue")
+
+
+        gemini_contents = [question]
+
+
+        # ==================================================
+        # IMAGE OU PDF → GEMINI MULTIMODAL
+        # ==================================================
+
+        if uploaded_file:
+
+            mime_type = (uploaded_file.mimetype or "").lower()
+
+            if mime_type not in ALLOWED_MIME_TYPES:
+
+                return jsonify({
+                    "response": "❌ Format non accepté. Utilisez JPG, PNG, WEBP ou PDF.",
+                    "latex": "",
+                    "error": "Format non accepté. Utilisez JPG, PNG, WEBP ou PDF."
+                }), 415
+
+
+            file_bytes = uploaded_file.read()
+
+            if not file_bytes:
+
+                return jsonify({
+                    "response": "❌ Le fichier envoyé est vide.",
+                    "latex": "",
+                    "error": "Le fichier envoyé est vide."
+                }), 400
+
+
+            gemini_contents.append(
+                types.Part.from_bytes(
+                    data=file_bytes,
+                    mime_type=mime_type
+                )
+            )
 
 
         response = client.models.generate_content(
 
             model=MODEL,
 
-            contents=question,
+            contents=gemini_contents,
 
             config=types.GenerateContentConfig(
 
@@ -175,7 +242,7 @@ def chat():
 
         text = response.text
 
-        print("Réponse Gemini reçue.")
+        print("Reponse Gemini recue.")
 
 
         student_response = ""
@@ -271,9 +338,25 @@ def chat():
             "response":
                 "❌ Erreur Gemini : " + str(e),
 
-            "latex": ""
+            "latex": "",
+
+            "error": "Erreur Gemini : " + str(e)
 
         }), 500
+
+
+# ======================================================
+# FICHIER TROP GRAND
+# ======================================================
+
+@app.errorhandler(413)
+def fichier_trop_grand(_error):
+
+    return jsonify({
+        "response": "❌ Le fichier dépasse la limite de 15 Mo.",
+        "latex": "",
+        "error": "Le fichier dépasse la limite de 15 Mo."
+    }), 413
 
 
 # ======================================================
@@ -288,6 +371,6 @@ if __name__ == "__main__":
 
         port=5000,
 
-        debug=True
+        debug=os.getenv("FLASK_DEBUG", "0") == "1"
 
     )
