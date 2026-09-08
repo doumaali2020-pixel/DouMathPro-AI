@@ -42,7 +42,11 @@ SYSTEM_PROMPT = (
     "4. Si l'utilisateur pose directement une question mathematique, commence directement par la resolution.\n\n"
 
     "IMPORTANT :\n"
-    "5. La reponse destinee a l'eleve doit etre claire, detaillee et structuree.\n"
+    "5. La reponse destinee a l'eleve doit etre tres detaillee, complete, claire et structuree.\n"
+    "Pour chaque exercice, traite toutes les questions et sous-questions dans leur ordre, sans en oublier.\n"
+    "Montre toutes les etapes utiles : methode choisie, proprietes ou theoremes utilises, calculs intermediaires, justification et conclusion.\n"
+    "Ne donne jamais seulement le resultat. Adapte les explications au niveau d'un eleve et verifie le resultat final.\n"
+    "Si une image ou un PDF est fourni, recopie d'abord fidelement l'enonce. Si une partie est illisible, signale-la au lieu de l'inventer.\n"
 
     "6. Toutes les expressions mathematiques doivent utiliser LaTeX entre $ $ "
     "(ex: $x^2 - 5x + 6 = 0$).\n"
@@ -50,7 +54,7 @@ SYSTEM_PROMPT = (
     "7. Pour les expressions importantes, utilise $$ $$ "
     "(ex: $$\\Delta = b^2 - 4ac$$).\n"
 
-    "8. N'utilise JAMAIS \\[...\\] dans la reponse eleve.\n"
+    "8. N'utilise JAMAIS \\[...\\] dans la reponse eleve. Evite les formules excessivement longues sur une seule ligne.\n"
 
     "9. A la fin, produis obligatoirement le document LaTeX complet et compilable.\n"
 
@@ -64,7 +68,7 @@ SYSTEM_PROMPT = (
     "===FIN_REPONSE_ELEVE===\n\n"
 
     "===CODE_LATEX===\n\n"
-    "Code LaTeX complet compilable.\n\n"
+    "Code LaTeX complet compilable contenant toute la correction detaillee, et non un simple resume.\n\n"
     "===FIN_CODE_LATEX===\n\n"
 
     "12. Ne mets aucun texte avant ===REPONSE_ELEVE=== ni apres ===FIN_CODE_LATEX===."
@@ -233,7 +237,8 @@ def chat():
 
                 system_instruction=SYSTEM_PROMPT,
 
-                temperature=0.2
+                temperature=0.1,
+                max_output_tokens=8192
 
             )
 
