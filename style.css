@@ -127,6 +127,18 @@ header p { margin: 0; opacity: .92; font-size: 14px; }
     -webkit-overflow-scrolling: touch;
 }
 
+/* Les longues formules restent glissables, sans afficher les barres grises. */
+.response-content mjx-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.response-content mjx-container::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
 .message-attachment {
     max-width: 100%;
     margin-bottom: 7px;
