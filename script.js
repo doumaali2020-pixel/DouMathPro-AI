@@ -40,7 +40,11 @@ function renderMarkdown(text) {
         expression => {
             const token = `MATHPROTOKEN${mathExpressions.length}X`;
             // Placer l'indice sous lim, même dans une formule en ligne.
-            mathExpressions.push(expression.replace(
+            const displayExpression = expression.replace(
+                /^(\$\$?|\\\(|\\\[)/,
+                opening => opening + "\\displaystyle "
+            );
+            mathExpressions.push(displayExpression.replace(
                 /\\lim(?![a-zA-Z])(?:\s*\\(?:no)?limits(?![a-zA-Z]))?/g,
                 () => "\\lim\\limits"
             ));
