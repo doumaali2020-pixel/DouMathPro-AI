@@ -60,7 +60,9 @@ function renderMarkdown(text) {
     mathExpressions.forEach((expression, index) => {
         safeHtml = safeHtml.replace(
             `MATHPROTOKEN${index}X`,
-            escapeHtml(expression)
+            // Un remplacement texte interprète $$, $& et $' comme des commandes.
+            // Le callback conserve littéralement tous les caractères du LaTeX.
+            () => escapeHtml(expression)
         );
     });
 
