@@ -39,7 +39,11 @@ function renderMarkdown(text) {
         /\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|\$(?!\$)(?:\\.|[^$\n])*?\$/g,
         expression => {
             const token = `MATHPROTOKEN${mathExpressions.length}X`;
-            mathExpressions.push(expression);
+            // Placer l'indice sous lim, même dans une formule en ligne.
+            mathExpressions.push(expression.replace(
+                /\\lim(?![a-zA-Z])(?:\s*\\(?:no)?limits(?![a-zA-Z]))?/g,
+                () => "\\lim\\limits"
+            ));
             return token;
         }
     );
