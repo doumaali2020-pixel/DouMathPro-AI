@@ -94,7 +94,11 @@ header p { margin: 0; opacity: .92; font-size: 14px; }
 
 @keyframes pulse { 50% { opacity: .55; } }
 
-.response-content p { margin: 0 0 10px; }
+.response-content p {
+    max-width: 100%;
+    margin: 0 0 10px;
+    overflow-wrap: anywhere;
+}
 .response-content p:last-child { margin-bottom: 0; }
 .response-content ul, .response-content ol { margin: 8px 0; padding-left: 24px; }
 .response-content mjx-container[display="true"] {
@@ -115,12 +119,21 @@ header p { margin: 0; opacity: .92; font-size: 14px; }
 }
 
 .response-content mjx-container:not([display="true"]) {
-    max-width: 100%;
+    display: inline-block !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    vertical-align: middle;
+    -webkit-overflow-scrolling: touch;
 }
 
 .message-attachment {
+    max-width: 100%;
     margin-bottom: 7px;
     font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .composer {
@@ -218,4 +231,5 @@ button:disabled { cursor: wait; opacity: .62; }
     #send-btn { padding: 11px 12px; font-size: 14px; }
     .upload-help { margin-left: 48px; }
     .response-content mjx-container[display="true"] { font-size: 88% !important; }
+    .response-content mjx-container:not([display="true"]) { font-size: 92% !important; }
 }
