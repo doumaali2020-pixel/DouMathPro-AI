@@ -1,612 +1,207 @@
-* {
+:root {
+    color-scheme: light;
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --surface: #ffffff;
+    --page: #eef2f7;
+    --muted: #64748b;
+    --line: #dbe3ef;
+    --bot: #eef2f7;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    width: 100%;
+    min-height: 100%;
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 body {
-    font-family: Arial, sans-serif;
-
-    background: #f2f4f8;
-
     min-height: 100vh;
-
     display: flex;
     justify-content: center;
     align-items: center;
+    background: var(--page);
+    color: #0f172a;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
+button, input { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+
 .chat-container {
-    width: 90%;
-    max-width: 700px;
-
-    background: white;
-
-    border-radius: 20px;
-
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-
+    width: min(100%, 760px);
+    height: min(860px, 100dvh);
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
+    background: var(--surface);
+    border-radius: 20px;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, .16);
 }
 
 header {
-    padding: 25px;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 19px 22px;
+    color: #fff;
     text-align: center;
-
-    background: #2563eb;
-
-    color: white;
+    background: linear-gradient(135deg, var(--blue), #1746b4);
 }
 
-header h1 {
-    margin-bottom: 8px;
-}
-
-.chat-box {
-    height: 500px;
-
-    padding: 20px;
-
-    overflow-y: auto;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 15px;
-}
-
-.message {
-    max-width: 75%;
-
-    padding: 12px 16px;
-
-    border-radius: 15px;
-
-    line-height: 1.5;
-}
-
-.bot {
-    background: #e5e7eb;
-
-    color: #111827;
-
-    align-self: flex-start;
-}
-
-.user {
-    background: #2563eb;
-
-    color: white;
-
-    align-self: flex-end;
-}
-
-.input-area {
-    display: flex;
-
-    gap: 10px;
-
-    padding: 15px;
-
-    border-top: 1px solid #ddd;
-}
-
-#user-input {
-    flex: 1;
-
-    padding: 12px 15px;
-
-    border: 1px solid #ccc;
-
-    border-radius: 10px;
-
-    outline: none;
-
-    font-size: 16px;
-}
-
-#user-input:focus {
-    border-color: #2563eb;
-}
-
-#send-btn {
-    padding: 12px 20px;
-
-    border: none;
-
-    border-radius: 10px;
-
-    background: #2563eb;
-
-    color: white;
-
-    cursor: pointer;
-
-    font-size: 16px;
-}
-
-#send-btn:hover {
-    background: #1d4ed8;
-}
-/* ============================= */
-/* Bouton Code LaTeX              */
-/* ============================= */
-
-.latex-button {
+.brand-logo {
+    width: 58px;
+    height: 58px;
     display: block;
-    margin-top: 15px;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
+    flex: 0 0 auto;
+    border: 2px solid rgba(255,255,255,.72);
+    border-radius: 50%;
+    background: #fff;
+    object-fit: cover;
 }
 
-
-/* Zone du code LaTeX */
-
-.latex-container {
-    margin-top: 10px;
-}
-
-
-/* Code */
-
-.latex-container pre {
-    padding: 15px;
-    overflow-x: auto;
-    border-radius: 8px;
-    font-family: Consolas, monospace;
-    font-size: 13px;
-}
-
-
-/* Bouton Copier */
-
-.copy-button {
-    margin-top: 8px;
-    padding: 8px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-}
-/* =====================================================
-   BOUTON CODE LATEX
-   ===================================================== */
-
-.latex-button {
-
-    display: block;
-
-    margin-top: 15px;
-
-    padding: 10px 16px;
-
-    border: none;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    font-size: 14px;
-
-    font-weight: bold;
-
-}
-
-
-/* =====================================================
-   CONTENEUR LATEX
-   ===================================================== */
-
-.latex-container {
-
-    margin-top: 10px;
-
-}
-
-
-/* =====================================================
-   CODE LATEX
-   ===================================================== */
-
-.latex-container pre {
-
-    padding: 15px;
-
-    overflow-x: auto;
-
-    border-radius: 8px;
-
-    font-family: Consolas, "Courier New", monospace;
-
-    font-size: 13px;
-
-    white-space: pre-wrap;
-
-}
-
-
-/* =====================================================
-   BOUTON COPIER
-   ===================================================== */
-
-.copy-button {
-
-    margin-top: 8px;
-
-    padding: 8px 14px;
-
-    border: none;
-
-    border-radius: 6px;
-
-    cursor: pointer;
-
-    font-size: 13px;
-
-}
-.bot-content {
-    line-height: 1.7;
-}
-
-.bot-content h1,
-.bot-content h2,
-.bot-content h3 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
-
-.bot-content .MathJax {
-    margin: 10px 0;
-}
-
-/* =========================================
-   CORRECTION MOBILE - MathPro AI
-   ========================================= */
-
-html, body {
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-.chat-container {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-.chat-box {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-.message {
-    max-width: 100%;
-    width: fit-content;
-    box-sizing: border-box;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
-}
-
-.message.bot {
-    max-width: 92%;
-    overflow-x: hidden;
-}
-
-.response-content {
-    max-width: 100%;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-}
-
-/* Formules MathJax larges */
-.response-content mjx-container[display="true"] {
-    max-width: 100% !important;
-    overflow-x: auto !important;
-    overflow-y: hidden;
-    display: block !important;
-    padding-bottom: 6px;
-}
-
-/* MathJax inline */
-.response-content mjx-container {
-    max-width: 100%;
-}
-
-/* Bloc code LaTeX */
-.latex-code-container,
-.latex-code-container pre {
-    max-width: 100%;
-    overflow-x: auto;
-}
-
-/* Zone de saisie */
-.input-area {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-#user-input {
-    min-width: 0;
-}
-
-/* =========================================
-   TELEPHONE
-   ========================================= */
-
-@media (max-width: 600px) {
-
-    body {
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        overflow-x: hidden;
-    }
-
-    .chat-container {
-        width: 100%;
-        max-width: 100%;
-        height: 100vh;
-        border-radius: 0;
-        margin: 0;
-    }
-
-    .chat-box {
-        padding: 12px;
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .message {
-        font-size: 16px;
-        line-height: 1.6;
-    }
-
-    .message.bot {
-        max-width: 95%;
-        margin-right: auto;
-    }
-
-    .message.user {
-        max-width: 85%;
-        margin-left: auto;
-    }
-
-    .response-content {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .response-content mjx-container[display="true"] {
-        font-size: 90% !important;
-        overflow-x: auto !important;
-        max-width: 100% !important;
-    }
-
-    .input-area {
-        padding: 10px;
-        gap: 8px;
-    }
-
-    #user-input {
-        flex: 1;
-        width: 100%;
-        min-width: 0;
-        font-size: 16px;
-    }
-
-    #send-btn {
-        flex-shrink: 0;
-        padding: 10px 14px;
-        font-size: 14px;
-    }
-}
-
-/* =========================================
-   SCROLL VERTICAL SUR TELEPHONE
-   ========================================= */
-
-html,
-body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    overflow-x: hidden;
-}
-
-.chat-container {
-    width: 100%;
-    height: 100dvh;
-    max-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
+header h1 { margin: 0 0 3px; font-size: 25px; }
+header p { margin: 0; opacity: .92; font-size: 14px; }
 
 .chat-box {
     flex: 1;
     min-height: 0;
-    width: 100%;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    -webkit-overflow-scrolling: touch;
-    box-sizing: border-box;
-}
-
-/* La zone de saisie reste en bas */
-.input-area {
-    flex-shrink: 0;
-}
-
-/* Messages adaptés à la largeur du téléphone */
-.message {
-    box-sizing: border-box;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-}
-
-.message.bot {
-    max-width: 92%;
-}
-
-/* Les grandes formules restent dans la réponse */
-.response-content {
-    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+    overflow-y: auto;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
+.message {
+    width: fit-content;
+    max-width: 86%;
+    padding: 12px 15px;
+    border-radius: 16px;
+    line-height: 1.58;
+    overflow-wrap: anywhere;
+}
+
+.message.bot { align-self: flex-start; background: var(--bot); border-bottom-left-radius: 5px; }
+.message.user { align-self: flex-end; color: #fff; background: var(--blue); border-bottom-right-radius: 5px; }
+.message.waiting { color: var(--muted); animation: pulse 1.4s infinite; }
+
+@keyframes pulse { 50% { opacity: .55; } }
+
+.response-content p { margin: 0 0 10px; }
+.response-content p:last-child { margin-bottom: 0; }
+.response-content ul, .response-content ol { margin: 8px 0; padding-left: 24px; }
 .response-content mjx-container[display="true"] {
+    display: block !important;
     max-width: 100% !important;
     overflow-x: auto !important;
     overflow-y: hidden;
-    display: block !important;
-    -webkit-overflow-scrolling: touch;
+    padding: 5px 0;
 }
 
+.message-attachment {
+    margin-bottom: 7px;
+    font-weight: 700;
+}
 
-/* =========================================
-   VERSION TELEPHONE
-   ========================================= */
+.composer {
+    flex: 0 0 auto;
+    padding: 10px 14px max(10px, env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: #fff;
+}
+
+.attachment-preview {
+    position: relative;
+    width: min(100%, 430px);
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 9px;
+    padding: 8px 40px 8px 9px;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    background: #eff6ff;
+}
+.attachment-preview[hidden] { display: none; }
+.attachment-preview img { width: 52px; height: 52px; object-fit: cover; border-radius: 8px; }
+.file-icon { font-size: 30px; }
+.file-meta { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.file-meta strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-meta span { color: var(--muted); font-size: 12px; }
+.remove-file {
+    position: absolute;
+    top: 7px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border: 0;
+    border-radius: 50%;
+    color: #475569;
+    background: #dbeafe;
+    cursor: pointer;
+    font-size: 21px;
+    line-height: 1;
+}
+
+.input-area { display: flex; gap: 8px; align-items: center; }
+#user-input {
+    min-width: 0;
+    flex: 1;
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    outline: 0;
+}
+#user-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+
+.icon-btn, #send-btn, .latex-button, .copy-latex-button {
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+}
+.icon-btn { width: 45px; height: 45px; flex: 0 0 auto; background: #e2e8f0; font-size: 21px; }
+#send-btn { padding: 12px 18px; color: #fff; background: var(--blue); }
+#send-btn:hover { background: var(--blue-dark); }
+button:disabled { cursor: wait; opacity: .62; }
+.upload-help { margin: 7px 0 0 53px; color: var(--muted); font-size: 11px; }
+
+.latex-container { margin-top: 12px; }
+.latex-button, .copy-latex-button { padding: 8px 11px; color: #fff; background: #334155; font-size: 12px; }
+.copy-latex-button { margin-top: 7px; background: var(--blue); }
+.latex-code-container pre {
+    max-width: 100%;
+    margin: 8px 0 0;
+    padding: 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    border-radius: 8px;
+    color: #e2e8f0;
+    background: #0f172a;
+    font: 12px/1.5 Consolas, monospace;
+}
 
 @media (max-width: 600px) {
-
-    .chat-container {
-        height: 100dvh;
-        max-height: 100dvh;
-    }
-
-    .chat-box {
-        flex: 1;
-        min-height: 0;
-        overflow-y: auto !important;
-        touch-action: pan-y;
-        padding: 12px;
-        padding-bottom: 20px;
-    }
-
-    .message.bot {
-        max-width: 95%;
-    }
-
-    .message.user {
-        max-width: 85%;
-    }
-}
-
-/* =====================================================
-   CORRECTION DEFINITIVE DU SCROLL SUR TELEPHONE
-   ===================================================== */
-
-@media screen and (max-width: 600px) {
-
-    html,
-    body {
-        width: 100%;
-        height: auto !important;
-        min-height: 100%;
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-        margin: 0;
-        padding: 0;
-    }
-
-    /* Le conteneur n'a plus de hauteur fixe */
-    .chat-container {
-        width: 100% !important;
-        max-width: 100% !important;
-
-        height: auto !important;
-        max-height: none !important;
-        min-height: 100vh;
-
-        overflow: visible !important;
-
-        margin: 0;
-        border-radius: 0;
-    }
-
-    /* Toute la conversation peut s'allonger */
-    .chat-box {
-        width: 100% !important;
-
-        height: auto !important;
-        max-height: none !important;
-        min-height: 0 !important;
-
-        overflow-y: visible !important;
-        overflow-x: hidden !important;
-
-        padding: 12px;
-        padding-bottom: 25px;
-
-        box-sizing: border-box;
-    }
-
-    /* Les réponses restent dans l'écran */
-    .message {
-        box-sizing: border-box;
-        overflow-wrap: break-word;
-        word-wrap: break-word;
-    }
-
-    .message.bot {
-        width: auto !important;
-        max-width: 95% !important;
-        margin-right: auto;
-    }
-
-    .message.user {
-        width: auto !important;
-        max-width: 85% !important;
-        margin-left: auto;
-    }
-
-    .response-content {
-        width: 100%;
-        max-width: 100%;
-        overflow-wrap: break-word;
-    }
-
-    /* Formules mathématiques très longues */
-    .response-content mjx-container[display="true"] {
-        display: block !important;
-        width: 100% !important;
-        max-width: 100% !important;
-
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* La zone question reste accessible en bas */
-    .input-area {
-        position: sticky;
-        bottom: 0;
-        z-index: 100;
-
-        width: 100%;
-        box-sizing: border-box;
-
-        background: white;
-        padding: 10px;
-
-        border-top: 1px solid #ddd;
-    }
-
-    #user-input {
-        min-width: 0;
-        width: 100%;
-    }
-
-    #send-btn {
-        flex-shrink: 0;
-    }
+    body { align-items: stretch; }
+    .chat-container { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+    header { padding: 13px 16px; }
+    .brand-logo { width: 50px; height: 50px; }
+    header h1 { font-size: 21px; }
+    .chat-box { padding: 12px; }
+    .message { max-width: 94%; font-size: 15px; }
+    .message.user { max-width: 88%; }
+    .composer { position: sticky; bottom: 0; padding-inline: 9px; }
+    .input-area { gap: 6px; }
+    .icon-btn { width: 42px; height: 42px; }
+    #user-input { padding: 11px; font-size: 16px; }
+    #send-btn { padding: 11px 12px; font-size: 14px; }
+    .upload-help { margin-left: 48px; }
 }

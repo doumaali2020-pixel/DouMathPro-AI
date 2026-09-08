@@ -2,12 +2,11 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#2563eb">
     <title>MathPro AI</title>
-
     <link rel="stylesheet" href="style.css">
 
-    <!-- Configuration unique de MathJax -->
     <script>
         window.MathJax = {
             tex: {
@@ -20,97 +19,49 @@
             }
         };
     </script>
-    
-    <!-- Scripts CDN (MathJax + MarkedJS) -->
-    <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-    <style>
-        header h1 {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 0;
-        }
-
-        .logo {
-            height: 45px;
-            width: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .latex-btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 6px 12px;
-            background-color: #2c3e50;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .latex-block {
-            display: none;
-            background: #282c34;
-            color: #abb2bf;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            white-space: pre-wrap;
-            margin-top: 10px;
-            font-size: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
 </head>
-
 <body>
-
-    <div class="chat-container">
-
+    <main class="chat-container">
         <header>
-            <h1>
-                <img src="logo.png"
-                     alt="Logo Douma Ali Mathématiques"
-                     class="logo">
-                MathPro AI
-            </h1>
-
-            <p> Votre Assistant  de  mathématique</p>
+            <img src="logo.png" alt="Logo Douma Ali Mathématiques" class="brand-logo">
+            <div>
+                <h1>MathPro AI</h1>
+                <p>Votre assistant de mathématiques</p>
+            </div>
         </header>
 
-        <div id="chat-box" class="chat-box">
-
+        <section id="chat-box" class="chat-box" aria-live="polite">
             <div class="message bot">
                 Bonjour 👋<br>
-                Je suis Douma Ali.<br>
-                Posez-moi une question de mathématiques.
+                Je suis <strong>Douma Ali</strong>.<br>
+                Écrivez une question ou envoyez une image/PDF d’un exercice.
+            </div>
+        </section>
+
+        <section class="composer" aria-label="Envoyer une question">
+            <div id="attachment-preview" class="attachment-preview" hidden>
+                <img id="image-preview" alt="Aperçu du document" hidden>
+                <span id="file-icon" class="file-icon" aria-hidden="true">📄</span>
+                <div class="file-meta">
+                    <strong id="file-name"></strong>
+                    <span id="file-size"></span>
+                </div>
+                <button id="remove-file" class="remove-file" type="button" aria-label="Supprimer le fichier">×</button>
             </div>
 
-        </div>
-
-        <div class="input-area">
-
-            <input
-                type="text"
-                id="user-input"
-                placeholder="Écrivez votre question..."
-            >
-
-            <button id="send-btn">
-                Envoyer
-            </button>
-
-        </div>
-
-    </div>
+            <div class="input-area">
+                <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" hidden>
+                <button id="attach-btn" class="icon-btn" type="button" title="Ajouter une image ou un PDF" aria-label="Ajouter une image ou un PDF">📎</button>
+                <input type="text" id="user-input" placeholder="Écrivez votre question…" autocomplete="off">
+                <button id="send-btn" type="button">Envoyer</button>
+            </div>
+            <p class="upload-help">Formats : JPG, PNG, WEBP ou PDF — 15 Mo maximum</p>
+        </section>
+    </main>
 
     <script src="script.js"></script>
-
 </body>
 </html>
