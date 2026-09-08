@@ -99,10 +99,23 @@ header p { margin: 0; opacity: .92; font-size: 14px; }
 .response-content ul, .response-content ol { margin: 8px 0; padding-left: 24px; }
 .response-content mjx-container[display="true"] {
     display: block !important;
+    width: 100% !important;
     max-width: 100% !important;
     overflow-x: auto !important;
     overflow-y: hidden;
-    padding: 5px 0;
+    padding: 8px 2px;
+    text-align: center;
+    -webkit-overflow-scrolling: touch;
+}
+
+.response-content {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.response-content mjx-container:not([display="true"]) {
+    max-width: 100%;
 }
 
 .message-attachment {
@@ -196,7 +209,7 @@ button:disabled { cursor: wait; opacity: .62; }
     .brand-logo { width: 50px; height: 50px; }
     header h1 { font-size: 21px; }
     .chat-box { padding: 12px; }
-    .message { max-width: 94%; font-size: 15px; }
+    .message { max-width: 94%; font-size: 16px; overflow: hidden; }
     .message.user { max-width: 88%; }
     .composer { position: sticky; bottom: 0; padding-inline: 9px; }
     .input-area { gap: 6px; }
@@ -204,4 +217,5 @@ button:disabled { cursor: wait; opacity: .62; }
     #user-input { padding: 11px; font-size: 16px; }
     #send-btn { padding: 11px 12px; font-size: 14px; }
     .upload-help { margin-left: 48px; }
+    .response-content mjx-container[display="true"] { font-size: 88% !important; }
 }

@@ -31,8 +31,32 @@ function escapeHtml(value) {
 
 function renderMarkdown(text) {
     if (!window.marked) return escapeHtml(text).replace(/\n/g, "<br>");
-    const rendered = marked.parse(text, { breaks: true });
-    return window.DOMPurify ? DOMPurify.sanitize(rendered) : escapeHtml(text).replace(/\n/g, "<br>");
+
+    // Protéger le LaTeX : Marked ne doit pas transformer les _ et *
+    // présents à l'intérieur de $...$ ou $$...$$ avant MathJax.
+    const mathExpressions = [];
+    const protectedText = text.replace(
+        /\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|\$(?!\$)(?:\\.|[^$\n])*?\$/g,
+        expression => {
+            const token = `MATHPROTOKEN${mathExpressions.length}X`;
+            mathExpressions.push(expression);
+            return token;
+        }
+    );
+
+    const rendered = marked.parse(protectedText, { breaks: true });
+    let safeHtml = window.DOMPurify
+        ? DOMPurify.sanitize(rendered)
+        : escapeHtml(protectedText).replace(/\n/g, "<br>");
+
+    mathExpressions.forEach((expression, index) => {
+        safeHtml = safeHtml.replace(
+            `MATHPROTOKEN${index}X`,
+            escapeHtml(expression)
+        );
+    });
+
+    return safeHtml;
 }
 
 function typesetMath(element) {
