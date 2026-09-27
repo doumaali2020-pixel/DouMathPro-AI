@@ -26,31 +26,61 @@ ALLOWED_MIME_TYPES = {
     "application/pdf",
 }
 
+SUBJECTS = {
+    "mathematiques": "Mathématiques",
+    "physique": "Physique",
+    "sciences_naturelles": "Sciences naturelles",
+    "chimie": "Chimie",
+}
+
+SUBJECT_INSTRUCTIONS = {
+    "mathematiques": (
+        "Traite les problèmes mathématiques avec des démonstrations rigoureuses, "
+        "des calculs détaillés et une vérification du résultat."
+    ),
+    "physique": (
+        "Identifie les lois physiques utilisées, définis les grandeurs, conserve les unités SI, "
+        "détaille les applications numériques et vérifie la cohérence du résultat."
+    ),
+    "sciences_naturelles": (
+        "Utilise un vocabulaire biologique et géologique précis, explique les mécanismes et les liens "
+        "de cause à effet, et propose un schéma légendé en LaTeX/TikZ lorsqu'il est utile."
+    ),
+    "chimie": (
+        "Équilibre les équations chimiques, précise les espèces et les conditions, conserve les unités, "
+        "détaille les calculs de quantité de matière, concentration, pH ou avancement selon l'exercice."
+    ),
+}
+
 
 # ======================================================
 # SYSTEM PROMPT
 # ======================================================
 
-SYSTEM_PROMPT = (
-    "Tu es l'assistant mathematique de Douma Ali, professeur de mathematiques.\n"
-    "Ta mission est de repondre aux questions mathematiques de maniere rigoureuse, claire et pedagogique.\n\n"
+BASE_SYSTEM_PROMPT = (
+    "Tu es l'assistant pédagogique de Douma Ali destiné aux élèves du baccalauréat tunisien.\n"
+    "Ta mission est de répondre de manière rigoureuse, claire et pédagogique, en français ou en arabe selon la langue de l'élève.\n\n"
 
     "PRESENTATION :\n"
-    "1. Tu es l'assistant mathematique de Douma Ali.\n"
+    "1. Tu es l'assistant pédagogique de Douma Ali.\n"
     "2. Ne dis jamais : Je suis MathPro AI.\n"
     "3. Ne repete pas Bonjour, je suis Douma Ali au debut de chaque exercice.\n"
-    "4. Si l'utilisateur pose directement une question mathematique, commence directement par la resolution.\n\n"
+    "4. Si l'utilisateur pose directement une question, commence directement par la résolution.\n\n"
 
     "IMPORTANT :\n"
-    "5. La reponse destinee a l'eleve doit etre claire, detaillee et structuree.\n"
+    "5. La reponse destinee a l'eleve doit etre tres detaillee, complete, claire et structuree.\n"
+    "Pour chaque exercice, traite toutes les questions et sous-questions dans leur ordre, sans en oublier.\n"
+    "Montre toutes les etapes utiles : methode choisie, proprietes ou theoremes utilises, calculs intermediaires, justification et conclusion.\n"
+    "Ne donne jamais seulement le resultat. Adapte les explications au niveau d'un eleve et verifie le resultat final.\n"
+    "Si une image ou un PDF est fourni, recopie d'abord fidelement l'enonce. Si une partie est illisible, signale-la au lieu de l'inventer.\n"
 
-    "6. Toutes les expressions mathematiques doivent utiliser LaTeX entre $ $ "
+    "6. Toutes les expressions mathématiques et scientifiques doivent utiliser LaTeX entre $ $ "
     "(ex: $x^2 - 5x + 6 = 0$).\n"
 
     "7. Pour les expressions importantes, utilise $$ $$ "
     "(ex: $$\\Delta = b^2 - 4ac$$).\n"
 
-    "8. N'utilise JAMAIS \\[...\\] dans la reponse eleve.\n"
+    "8. N'utilise JAMAIS \\[...\\] dans la reponse eleve. Evite les formules excessivement longues sur une seule ligne.\n"
 
     "9. A la fin, produis obligatoirement le document LaTeX complet et compilable.\n"
 
@@ -64,11 +94,27 @@ SYSTEM_PROMPT = (
     "===FIN_REPONSE_ELEVE===\n\n"
 
     "===CODE_LATEX===\n\n"
-    "Code LaTeX complet compilable.\n\n"
+    "Code LaTeX complet compilable contenant toute la correction detaillee, et non un simple resume.\n\n"
     "===FIN_CODE_LATEX===\n\n"
 
     "12. Ne mets aucun texte avant ===REPONSE_ELEVE=== ni apres ===FIN_CODE_LATEX===."
 )
+
+
+def normalize_subject(value):
+    subject = str(value or "mathematiques").strip().lower()
+    return subject if subject in SUBJECTS else "mathematiques"
+
+
+def build_system_prompt(subject):
+    label = SUBJECTS[subject]
+    instructions = SUBJECT_INSTRUCTIONS[subject]
+    return (
+        f"MATIÈRE SÉLECTIONNÉE : {label}.\n"
+        "Réponds uniquement dans le cadre de cette matière et conformément au programme tunisien.\n"
+        f"CONSIGNES SPÉCIFIQUES : {instructions}\n\n"
+        + BASE_SYSTEM_PROMPT
+    )
 
 
 # ======================================================
@@ -97,10 +143,14 @@ def chat():
 
             data = request.get_json(silent=True) or {}
             question = str(data.get("message", "")).strip()
+            subject = normalize_subject(data.get("matiere"))
 
         else:
 
             question = str(request.form.get("message", "")).strip()
+            subject = normalize_subject(request.form.get("matiere"))
+
+        subject_label = SUBJECTS[subject]
 
 
         # ==================================================
@@ -119,7 +169,7 @@ def chat():
         if uploaded_file and not question:
 
             question = (
-                "Analyse ce document, recopie clairement l'énoncé mathématique, "
+                f"Analyse ce document de {subject_label}, recopie clairement l'énoncé, "
                 "puis donne une solution détaillée étape par étape."
             )
 
@@ -143,8 +193,8 @@ def chat():
 
             return jsonify({
                 "response":
-                    "Bonjour, je suis Douma Ali, votre professeur de mathématiques. "
-                    "Comment puis-je vous aider en mathématiques ?",
+                    "Bonjour, je suis Douma Ali, votre assistant pédagogique. "
+                    f"Comment puis-je vous aider en {subject_label} ?",
                 "latex": ""
             })
 
@@ -157,8 +207,8 @@ def chat():
 
             return jsonify({
                 "response":
-                    "Bonsoir, je suis Douma Ali, votre professeur de mathématiques. "
-                    "Comment puis-je vous aider en mathématiques ?",
+                    f"Bonsoir, je suis votre professeur de {subject_label}. "
+                    f"Comment puis-je vous aider en {subject_label} ?",
                 "latex": ""
             })
 
@@ -171,8 +221,8 @@ def chat():
 
             return jsonify({
                 "response":
-                    "Salut, je suis Douma Ali, votre professeur de mathématiques. "
-                    "Comment puis-je vous aider en mathématiques ?",
+                    f"Salut, je suis votre professeur de {subject_label}. "
+                    f"Comment puis-je vous aider en {subject_label} ?",
                 "latex": ""
             })
 
@@ -231,9 +281,10 @@ def chat():
 
             config=types.GenerateContentConfig(
 
-                system_instruction=SYSTEM_PROMPT,
+                system_instruction=build_system_prompt(subject),
 
-                temperature=0.2
+                temperature=0.1,
+                max_output_tokens=8192
 
             )
 
